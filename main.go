@@ -3,10 +3,33 @@ package main
 import (
 	"flag"
 	"fmt"
+	"os"
+	"path"
 	"sync"
 )
 
-func write_to_file() {
+func write_all_to_file(fname string, addr string, results chan ScanResult) {
+	cwd, wd_err := os.Getwd()
+
+	if wd_err == nil {
+		fmt.Println("Could not determine current working directory. Content will not be written to file.")
+		return
+	}
+
+	fpath := path.Join(cwd, fname)
+
+	f, fpath_err := os.Create(fpath)
+
+	if fpath_err != nil {
+		fmt.Println("Could not create output file.")
+		return
+	}
+
+	fmt.Fprintf(f, "Results for %s:\n\n", addr)
+	for it := range results {
+		var st = it.String()
+		fmt.Fprintf(f, "\t%s\n", st)
+	}
 
 }
 
@@ -32,8 +55,16 @@ func main() {
 	}
 	wg.Wait()
 	close(ch_results)
-	fmt.Println("Results: ")
-	for it := range ch_results {
-		fmt.Println(it)
+
+	fname := conf.outputFile
+	if fname != "" {
+		write_all_to_file(fname, conf.host, ch_results)
+	} else {
+		for it := range ch_results {
+			if it.open {
+				fmt.Println(it.String())
+			}
+		}
 	}
+
 }

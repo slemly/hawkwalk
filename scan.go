@@ -13,6 +13,10 @@ type ScanResult struct {
 	err    error
 }
 
+func (s ScanResult) String() string {
+	return fmt.Sprintf("{ Port %d: Open {%t}\tBanner {%s}\tError str {%s} }", s.port, s.open, s.banner, s.err.Error())
+}
+
 func scanPort(host string, port int, timeout time.Duration) ScanResult {
 	fmt.Printf("Scanning %s:%d (timeout %s)\n", host, port, timeout.String())
 	isOpen := false

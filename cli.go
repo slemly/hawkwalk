@@ -16,11 +16,13 @@ type Configs struct {
 	workers    uint
 }
 
+var FIFTEEN_SECONDS_IN_MICROSECONDS = 15 * 1000 * 1000 * 1000
+
 var (
 	flgHost    = flag.String("host", "localhost", "Specify host IP address")
-	flgPorts   = flag.String("ports", "1-10", "Specify ports or port range")
+	flgPorts   = flag.String("ports", "1-1000", "Specify ports or port range")
 	flgWorkers = flag.Uint("workers", 100, "Specify number of workers")
-	flgTimeout = flag.Duration("timeout", time.Duration(100000), "Specify timeout duration for scanning") // time is in nanoseconds
+	flgTimeout = flag.Duration("timeout", time.Duration(FIFTEEN_SECONDS_IN_MICROSECONDS), "Specify timeout duration for scanning") // time is in microseconds
 	flgOutput  = flag.String("oN", "", "Specify output file")
 )
 
